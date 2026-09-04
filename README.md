@@ -1,18 +1,30 @@
-# Reclaim â€” Revenue Recovery Intelligence Engine
+# Reclaim — Revenue Recovery Intelligence Engine
 
-> Razorpay Buildathon 2026 Â· Track 03 â€” AI Revenue Recovery
+![Razorpay Buildathon 2026](https://img.shields.io/badge/Razorpay_Buildathon_2026-Track_03_—_AI_Revenue_Recovery-blue.svg)
 
-## 1. Project
+Reclaim is an AI-powered revenue recovery intelligence engine for failed payments. It diagnoses why revenue is at risk, evaluates bounded recovery interventions, applies deterministic policy controls, routes sensitive cases to humans, verifies actual outcomes, and measures incremental recovery against a holdout group.
 
-Reclaim â€” Revenue Recovery Intelligence Engine.
+## Why Reclaim?
 
-## 2. Problem
+**Traditional Retry Systems:**
+- Blindly retry harder without diagnosis
+- Limited governance or bounds on interventions
+- Success is often conflated with true recovery
+- Little to no experimental measurement
 
-Failed payments create recoverable revenue leakage, but blindly retrying payments is not intelligent recovery. Modern revenue recovery requires understanding *why* a payment failed and orchestrating the optimal intervention (e.g., smart retries, routing, user messaging) without violating risk policies or wasting resources.
+**Reclaim:**
+- **Diagnoses** the true failure reason
+- **Generates** a closed, bounded set of intervention candidates
+- **Calculates** deterministic Expected Recoverable Value (ERV)
+- **Enforces** deterministic policy limits
+- **Routes** high-risk or sensitive cases for human approval
+- **Verifies** payment recovery independently of execution success
+- **Compares** treatment recovery against a rigorous holdout group
+- **Preserves** an append-only, comprehensive audit trail
 
-## 3. Core Principle
+## Core Principle
 
-```
+```text
 AI reasons and recommends.
 Deterministic code authorizes.
 Execution performs.
@@ -21,187 +33,209 @@ Experimentation measures.
 Audit records everything.
 ```
 
-## 4. Architecture
+## What Is AI vs Deterministic?
 
-Reclaim is built on a modular monolith architecture.
+**AI (The Brain)** is responsible for:
+- Diagnosing the likely failure reason from context.
+- Producing an advisory recovery probability.
+- Informing a closed set of intervention candidates (e.g., smart retry, dunning).
 
-### Backend
-- **Python 3.14+**
-- **FastAPI**
-- **PostgreSQL**
-- **SQLAlchemy async**
-- **Pydantic v2**
-- **Alembic** for migrations
+*The LLM can recommend; it cannot decide whether money-moving behavior is allowed.*
 
-### Frontend
-- **React**
-- **TypeScript**
-- **Vite**
-- **Tailwind CSS**
-- **React Router**
-- **TanStack Query** (React Query)
-- **Recharts**
-- **Lucide** for icons
+**Deterministic Systems (The Engine)** are responsible for:
+- Treatment/holdout assignment.
+- Probability calibration and ERV calculation.
+- Policy authorization (ALLOW_AUTO, REQUIRE_APPROVAL, BLOCK).
+- Action creation and provider execution.
+- Payment outcome verification.
+- Experiment aggregation and measurement.
+- Append-only auditing.
 
-### AI
-- **AIProvider abstraction** for easy swapping of LLM engines
-- **ClaudeProvider** (Anthropic Claude 3.5 Sonnet)
-- **FakeAIProvider** for deterministic testing
-- **Structured Pydantic-validated output** for all LLM calls
-- **AI remains advisory**: AI only provides diagnosis and candidate interventions; it never authorizes or executes financial actions.
+## Architecture
 
-## 5. End-to-End Flow
-
+```text
+Payment Event
+     ↓
+Risk Detection
+     ↓
+Enrichment
+     ↓
+Treatment / Holdout Assignment
+     ↓
+AI Diagnosis
+     ↓
+Closed Intervention Candidates
+     ↓
+Probability Calibration + ERV
+     ↓
+Deterministic Policy Engine
+     ├── BLOCK
+     ├── REQUIRE_APPROVAL → Human
+     └── ALLOW_AUTO
+              ↓
+       Execution Provider
+              ↓
+          Verification
+              ↓
+     Experiment Aggregation
+              ↓
+          Audit Trail
 ```
-Payment event
-â†’ risk detection
-â†’ enrichment
-â†’ deterministic treatment/holdout assignment
-â†’ AI diagnosis
-â†’ closed intervention candidates
-â†’ deterministic probability calibration
-â†’ ERV calculation
-â†’ deterministic policy
-â†’ automatic execution OR human approval
-â†’ provider execution
-â†’ verification
-â†’ experiment aggregation
-â†’ audit trail
-```
 
-## 6. Important Safety & Governance Rules
+## Measured Demo Result
 
-- **Money uses integer minor units**: All financial amounts use integer minor units (e.g., paise, cents). No floating-point arithmetic is used for authoritative monetary values.
-- **AI cannot authorize or execute payments**: The AI engine is completely isolated from execution and policy limits.
-- **Policy is deterministic**: Approval thresholds and rules execute deterministically in code.
-- **Holdout cases never receive AI/interventions/actions**: Cases assigned to the holdout group are rigorously isolated to measure baseline recovery.
-- **STOPPED cases do not proceed**: Terminal states instantly halt processing.
-- **Execution success is not considered recovery until verification**: An execution provider's success only triggers a verification phase.
-- **Ambiguous execution is not automatically retried**: Ambiguous network/provider timeouts require external verification, preventing duplicate charges.
-- **Action idempotency is DB-enforced**: Unique constraints prevent duplicate executions.
-- **Audit events are append-only**: Comprehensive compliance tracking.
-- **Human approval exists for high-value/manual-review actions**: Recoveries exceeding automated thresholds are routed to operators.
+*This is a deterministic synthetic demo fixture for demonstrating the measurement workflow, not a production performance claim.*
 
-## 7. Demo Mode
+| Metric | Treatment | Holdout |
+|--------|-----------|---------|
+| **Cases** | 90 | 10 |
+| **Recovered** | 45 | 2 |
+| **Recovery Rate** | 50% | 20% |
 
-Reclaim features a built-in Demo Mode that deterministically drives the real domain services for judging and demonstration purposes. It executes four specific scenarios:
+- **Measured lift:** 30 percentage points (3000 bps)
+- **Incremental recovered cases:** 27
+- **Incremental recovery:** 2,700,000 minor units (₹27,000)
 
-### Scenario 1: Auto Recovery
-- **â‚¹800** recoverable failure (`insufficient_funds`)
-- â†’ AI diagnosis
-- â†’ `ALLOW_AUTO` policy evaluation
-- â†’ Simulator execution
-- â†’ Verification
-- â†’ **Recovered**
+*Note: Treatment recovery happens through the full Reclaim AI workflow. Holdout recovery represents natural/external recovery captured directly via payment status. Holdout cases do NOT receive AI diagnosis, interventions, actions, execution, or verification.*
 
-### Scenario 2: Human Approval
-- **â‚¹48,000** technical failure
-- â†’ Exceeds real **â‚¹20,000** auto-approval threshold
-- â†’ `REQUIRE_APPROVAL` policy evaluation
-- â†’ `PENDING_APPROVAL` action state
-- â†’ Human approval
-- â†’ Execution/Verification
+## Demo Scenarios
 
-### Scenario 3: Terminal Stop
-- `revoked_mandate` failure (Terminal)
-- â†’ `STOPPED`
-- â†’ Zero AI / intervention / action / approval / execution.
+Reclaim includes a deterministic Demo Mode to evaluate the architecture across four scenarios:
 
-### Scenario 4: Experimentation & Holdout
-- **100-case** experiment
-- â†’ 90 Treatment
-- â†’ 10 Holdout
-- â†’ 45 Treatment recovered
-- â†’ 2 Holdout naturally recovered
-- â†’ Treatment recovery rate = **50% (5000 bps)**
-- â†’ Holdout recovery rate = **20% (2000 bps)**
-- â†’ Lift = **30% (3000 bps)**
-- â†’ **27** incremental recovered cases
-- â†’ **2,700,000 minor units (â‚¹27,000)** incremental recovery.
+| Scenario | Details | Flow |
+|----------|---------|------|
+| **Scenario 1: Auto Recovery** | ₹800 recoverable failure (`insufficient_funds`) | AI diagnosis → `ALLOW_AUTO` policy → auto execution → verification → **Recovered** |
+| **Scenario 2: Human Approval** | ₹48,000 technical failure | Exceeds ₹20,000 auto threshold → `REQUIRE_APPROVAL` → `PENDING_APPROVAL` → human approval → execution → **Verification** |
+| **Scenario 3: Terminal Stop** | `revoked_mandate` failure (Terminal) | `STOPPED` state → zero AI / intervention / action / approval / execution |
+| **Scenario 4: Experimentation**| 100-case experiment | 90 Treatment vs 10 Holdout → Incremental recovery measured accurately |
 
-## 8. Setup
+## Safety & Governance
+
+- **Money is represented in integer minor units.**
+- **AI is advisory and cannot authorize financial actions.**
+- **Policy decisions are deterministic.**
+- **Holdout cases are excluded from the recovery intervention workflow.**
+- **STOPPED cases do not continue.**
+- **Execution success does not equal payment recovery.** Recovery requires verification.
+- **Ambiguous execution is not automatically retried.**
+- **Action idempotency is database-enforced.**
+- **Audit events are append-only.**
+- **High-value/manual-review actions can require human approval.**
+
+## Tech Stack
+
+| Layer | Technologies |
+|-------|--------------|
+| **Backend** | Python, FastAPI, PostgreSQL, SQLAlchemy async, Pydantic v2, Alembic |
+| **Frontend** | React, TypeScript, Vite, Tailwind CSS, React Router, TanStack Query, Recharts, Lucide |
+| **AI** | AIProvider abstraction, ClaudeProvider, FakeAIProvider, structured Pydantic validation |
+| **Execution** | ExecutionProvider abstraction, SimulatorProvider, RazorpayProvider |
+
+## Setup
 
 ### Prerequisites
 - Python 3.14+
 - Node.js v18+
 - PostgreSQL 15+
 
-### Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv .venv
-   .venv\Scripts\activate      # Windows
-   source .venv/bin/activate    # macOS/Linux
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Set environment variables (create a `.env` file in `backend/` or export them):
-   ```bash
-   DATABASE_URL="postgresql+asyncpg://postgres:postgres@localhost:5433/reclaim_test"
-   ANTHROPIC_API_KEY="your-api-key"
-   ```
-5. Run database migrations:
-   ```bash
-   alembic upgrade head
-   ```
-6. Start the FastAPI server:
-   ```bash
-   python -m uvicorn app.main:app --reload --port 8000
-   ```
+### Running the Project
 
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
+Navigate to the repository root:
+```bash
+cd "Reclaim project"
+```
 
-## 9. Testing
-
-The backend includes a comprehensive `pytest` suite testing all orchestrators, providers, policies, and demo mode mechanics.
-
+**1. Backend Setup**
 ```bash
 cd backend
-python -m pytest tests/backend/ -v
+python -m venv .venv
+
+# Activate the virtual environment
+# Windows PowerShell:
+.venv\Scripts\Activate.ps1
+# macOS/Linux:
+# source .venv/bin/activate
+
+pip install -r requirements.txt
 ```
 
-## 10. Project Structure
-
+**2. Environment Variables**
+Create a `.env` file in the `backend/` directory with a safe placeholder:
+```env
+DATABASE_URL="postgresql+asyncpg://postgres:postgres@localhost:5433/reclaim_test"
+ANTHROPIC_API_KEY="your-api-key"
 ```
-Reclaim project/
-â”œâ”€â”€ .agent/skills/          # AI agent skills and architecture rules
-â”œâ”€â”€ backend/
-â”‚   â”œâ”€â”€ app/                # Application package (API, Domain, Services, Models)
-â”‚   â””â”€â”€ tests/              # Backend test suite
-â”œâ”€â”€ docs/                   # Architecture and design documentation
-â””â”€â”€ frontend/
-    â””â”€â”€ src/                # React components, pages, hooks, and API clients
+*Note: The project includes a `FakeAIProvider` for deterministic testing if a real Anthropic key is unavailable.*
+
+**3. Database Migrations**
+```bash
+alembic upgrade head
 ```
 
-## 11. Buildathon Positioning
+**4. Start Backend Server**
+```bash
+python -m uvicorn app.main:app --reload --port 8000
+```
 
-Reclaim is designed for the **Razorpay AI Buildathon Track 03 â€” AI Revenue Recovery**.
-It uses simulator and demo execution where appropriate. Real Razorpay API integration is limited to the documented provider capability. This is a hackathon submission demonstrating an intelligent architectural pattern, not a guaranteed-recovery bank-grade production integration.
+**5. Start Frontend Server**
+Open a new terminal to the repository root:
+```bash
+cd "Reclaim project"/frontend
+npm install
+npm run dev
+```
 
-## 12. Demo Instructions
+## Verification
+
+- **Backend:** 149 tests passing
+- **Frontend:** lint passing (`npm run lint`)
+- **Frontend:** production build passing (`npm run build`)
+- **PostgreSQL:** Migration chain verified
+- **Integration:** Demo scenarios verified end-to-end
+
+### Running Tests
+
+The test suite is rooted at the repository level.
+
+```powershell
+cd "Reclaim project"
+$env:PYTHONPATH="."
+pytest -v
+```
+*(On macOS/Linux, use `PYTHONPATH="." python -m pytest -v`)*
+
+## Demo Instructions
 
 To run the Demo Mode for judges:
-1. Start both the backend and frontend servers.
-2. Navigate to the **Overview** dashboard in the web UI.
-3. Locate the **Demo Mode Control Panel**.
-4. Use the **Reset Demo** button to clear previous demo data without affecting real tenant records.
-5. Click **Run Scenario 1**, **2**, **3**, or **4**.
-6. Follow the provided links in the UI to observe the resulting Action, Case, or Experiment metrics live in the dashboard.
+1. Start PostgreSQL.
+2. Start the backend.
+3. Start the frontend.
+4. Open the Overview dashboard.
+5. Click **Reset Demo**.
+6. Run **Scenario 1**.
+7. Run **Scenario 2** and approve the pending action.
+8. Run **Scenario 3**.
+9. Run **Scenario 4**.
+10. Open **Experiments / Analytics** to show measured lift.
+11. Open **Audit** to show the decision trail.
+
+## Repository Structure
+
+```text
+Reclaim project/
+├── .agent/skills/    → Antigravity agent skills and project-specific guidance
+├── backend/
+│   ├── app/api/      → HTTP API
+│   ├── app/domain/   → deterministic domain rules and provider abstractions
+│   ├── app/models/   → persistence model
+│   └── app/services/ → orchestration and workflows
+├── docs/             → architecture documentation
+├── frontend/src/     → dashboard and operational UI
+├── tests/backend/    → backend regression suite
+└── README.md
+```
+
+## Buildathon Positioning / Limitations
+
+This project is submitted for the **Razorpay AI Buildathon 2026 · Track 03 — AI Revenue Recovery**.
+`SimulatorProvider` is used for deterministic demo execution. Razorpay integration is limited to the documented provider capability implemented in the repository. The project does not pretend to have a universal Razorpay retry API. Dunning email and smart retry are simulated where the provider abstraction does not expose a corresponding real API. This is a buildathon prototype demonstrating the architecture, not a bank-grade production integration.
