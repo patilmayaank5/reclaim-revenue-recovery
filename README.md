@@ -180,7 +180,7 @@ python -m uvicorn app.main:app --reload --port 8000
 **5. Start Frontend Server**
 Open a new terminal to the repository root:
 ```bash
-cd "Reclaim project"/frontend
+cd frontend
 npm install
 npm run dev
 ```
