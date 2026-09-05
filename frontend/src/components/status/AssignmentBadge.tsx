@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const AssignmentBadge: React.FC<Props> = ({ group }) => {
-  if (!group) return <span className="text-slate-500 text-xs font-mono">â€”</span>;
+  if (!group) return <span className="text-slate-500 text-xs font-mono">—</span>;
 
   const normalized = group.toLowerCase();
 

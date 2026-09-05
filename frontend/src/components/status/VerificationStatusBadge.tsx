@@ -8,7 +8,7 @@ interface Props {
 
 export const VerificationStatusBadge: React.FC<Props> = ({ status }) => {
   if (!status) {
-    return <span className="text-slate-500 text-xs font-mono">â€”</span>;
+    return <span className="text-slate-500 text-xs font-mono">—</span>;
   }
 
   const normalized = status.toLowerCase();

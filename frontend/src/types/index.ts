@@ -1,4 +1,4 @@
-// Reclaim Control Room â€” Domain Types
+// Reclaim Control Room — Domain Types
 
 export type CaseStatus =
   | 'detected'

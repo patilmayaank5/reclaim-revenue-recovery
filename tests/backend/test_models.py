@@ -1,4 +1,4 @@
-"""Phase 1 tests â€” SQLAlchemy model schema verification.
+"""Phase 1 tests — SQLAlchemy model schema verification.
 
 These tests verify critical architecture guarantees WITHOUT requiring
 a running PostgreSQL database. They inspect SQLAlchemy model metadata.

@@ -319,7 +319,7 @@ export const OverviewPage: React.FC = () => {
                         {item.id.substring(0, 8)}...
                       </Link>
                     </td>
-                    <td className="p-3">{item.payment?.external_id || 'â€”'}</td>
+                    <td className="p-3">{item.payment?.external_id || '—'}</td>
                     <td className="p-3 font-bold text-slate-100">
                       {formatMoneyMinor(item.amount_at_risk_minor, item.currency)}
                     </td>
@@ -327,7 +327,7 @@ export const OverviewPage: React.FC = () => {
                       <CaseStatusBadge status={item.status} />
                     </td>
                     <td className="p-3">
-                      {item.action ? <ActionStatusBadge status={item.action.status} /> : <span className="text-slate-500">â€”</span>}
+                      {item.action ? <ActionStatusBadge status={item.action.status} /> : <span className="text-slate-500">—</span>}
                     </td>
                     <td className="p-3">
                       <VerificationStatusBadge status={item.verification?.status} />

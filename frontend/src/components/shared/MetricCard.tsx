@@ -27,7 +27,7 @@ export function MetricCard({ title, value, subtitle, trend, icon, className = ''
         <div className="flex items-center mt-2 space-x-2">
           {trend && (
             <span className={`text-xs font-medium flex items-center ${trend.isPositive ? 'text-emerald-500' : 'text-red-500'}`}>
-              {trend.isPositive ? 'â†‘' : 'â†“'} {trend.value}
+              {trend.isPositive ? '↑' : '↓'} {trend.value}
             </span>
           )}
           {(trend?.label || subtitle) && (

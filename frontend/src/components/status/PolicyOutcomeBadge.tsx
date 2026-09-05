@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const PolicyOutcomeBadge: React.FC<Props> = ({ outcome }) => {
-  if (!outcome) return <span className="text-slate-500 text-xs font-mono">â€”</span>;
+  if (!outcome) return <span className="text-slate-500 text-xs font-mono">—</span>;
 
   const normalized = outcome.toLowerCase();
 

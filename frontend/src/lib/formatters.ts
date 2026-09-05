@@ -2,26 +2,22 @@
 
 /**
  * Formats integer minor unit monetary value to display string.
- * Example: 499900 minor INR -> "â‚¹4,999.00"
+ * Example: 499900 minor INR -> "₹4,999.00"
  */
 export function formatMoneyMinor(amountMinor: number | null | undefined, currency = 'INR'): string {
-  if (amountMinor == null) return 'â€”';
+  if (amountMinor == null) return '—';
 
   const major = amountMinor / 100;
-  const symbolMap: Record<string, string> = {
-    INR: 'â‚¹',
-    USD: '$',
-    EUR: 'â‚¬',
-    GBP: 'Â£',
-  };
 
-  const symbol = symbolMap[currency.toUpperCase()] || `${currency} `;
-  const formatted = new Intl.NumberFormat('en-IN', {
+  // Use appropriate locale based on currency to ensure proper grouping (e.g. en-IN for INR)
+  const locale = currency.toUpperCase() === 'INR' ? 'en-IN' : 'en-US';
+
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency.toUpperCase(),
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(major);
-
-  return `${symbol}${formatted}`;
 }
 
 /**
@@ -29,7 +25,7 @@ export function formatMoneyMinor(amountMinor: number | null | undefined, currenc
  * Example: 6500 BPS -> "65.0%"
  */
 export function formatBps(bps: number | null | undefined): string {
-  if (bps == null) return 'â€”';
+  if (bps == null) return '—';
   const pct = (bps / 100).toFixed(1);
   return `${pct}%`;
 }
@@ -39,7 +35,7 @@ export function formatBps(bps: number | null | undefined): string {
  * Example: 0.85 -> "85.0%"
  */
 export function formatConfidence(conf: number | null | undefined): string {
-  if (conf == null) return 'â€”';
+  if (conf == null) return '—';
   return `${(conf * 100).toFixed(1)}%`;
 }
 
@@ -47,7 +43,7 @@ export function formatConfidence(conf: number | null | undefined): string {
  * Formats ISO date string to compact operational timestamp.
  */
 export function formatTimestamp(isoStr: string | null | undefined): string {
-  if (!isoStr) return 'â€”';
+  if (!isoStr) return '—';
   try {
     const d = new Date(isoStr);
     return new Intl.DateTimeFormat('en-IN', {

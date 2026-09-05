@@ -40,7 +40,7 @@ async def get_current_policy(session: AsyncSession = Depends(get_db)):
             "precedence": 2,
             "rule": "Economic Viability",
             "outcomes": "BLOCK",
-            "description": "ERV â‰¤ 0 blocked"
+            "description": "ERV ≤ 0 blocked"
         },
         {
             "precedence": 3,
@@ -52,7 +52,7 @@ async def get_current_policy(session: AsyncSession = Depends(get_db)):
             "precedence": 4,
             "rule": "Maximum Recovery Ceiling",
             "outcomes": "BLOCK",
-            "description": "Recoverable amount exceeds hard ceiling â€” overrides approval threshold"
+            "description": "Recoverable amount exceeds hard ceiling — overrides approval threshold"
         },
         {
             "precedence": 5,
@@ -70,7 +70,7 @@ async def get_current_policy(session: AsyncSession = Depends(get_db)):
             "precedence": 7,
             "rule": "Auto-Execution Approval",
             "outcomes": "ALLOW_AUTO",
-            "description": "All safety gates passed â€” eligible for automatic execution"
+            "description": "All safety gates passed — eligible for automatic execution"
         }
     ]
 

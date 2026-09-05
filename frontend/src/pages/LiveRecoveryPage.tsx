@@ -79,7 +79,7 @@ export const LiveRecoveryPage: React.FC = () => {
                         {c.id.substring(0, 8)}...
                       </Link>
                     </td>
-                    <td className="p-3 font-mono text-slate-300">{c.payment?.external_id || 'â€”'}</td>
+                    <td className="p-3 font-mono text-slate-300">{c.payment?.external_id || '—'}</td>
                     <td className="p-3 font-bold text-slate-100">
                       {formatMoneyMinor(c.amount_at_risk_minor, c.currency)}
                     </td>
@@ -89,7 +89,7 @@ export const LiveRecoveryPage: React.FC = () => {
                       <CaseStatusBadge status={c.status} />
                     </td>
                     <td className="p-3">
-                      {c.action ? <ActionStatusBadge status={c.action.status} /> : <span className="text-slate-500">â€”</span>}
+                      {c.action ? <ActionStatusBadge status={c.action.status} /> : <span className="text-slate-500">—</span>}
                     </td>
                     <td className="p-3">
                       <VerificationStatusBadge status={c.verification?.status} />

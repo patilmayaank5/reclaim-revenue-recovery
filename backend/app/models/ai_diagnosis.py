@@ -22,7 +22,7 @@ class AIDiagnosis(CreatedAtMixin, Base):
     """AI-generated diagnosis for a revenue-at-risk case.
 
     Stores the structured output of the AI diagnosis step.
-    AI will be implemented in Phase 4 â€” this is the persistence model only.
+    AI will be implemented in Phase 4 — this is the persistence model only.
     """
 
     __tablename__ = "ai_diagnoses"
@@ -50,7 +50,7 @@ class AIDiagnosis(CreatedAtMixin, Base):
     )
     recovery_probability: Mapped[float | None] = mapped_column(
         Float, nullable=True,
-        comment="Calibrated recovery probability â€” separate from ai_confidence.",
+        comment="Calibrated recovery probability — separate from ai_confidence.",
     )
     model_provider: Mapped[str] = mapped_column(
         String(50), nullable=False,

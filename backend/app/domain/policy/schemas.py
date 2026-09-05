@@ -31,11 +31,11 @@ class PolicyLimitsConfig(BaseModel):
     """Deterministic policy limit thresholds in integer minor units."""
     auto_approval_threshold_minor: int = Field(
         default=2_000_000,
-        description="Threshold above which human approval is required (e.g. â‚¹20,000.00 = 2,000,000 paise)",
+        description="Threshold above which human approval is required (e.g. ₹20,000.00 = 2,000,000 paise)",
     )
     max_recovery_limit_minor: int = Field(
         default=50_000_000,
-        description="Hard maximum ceiling above which recovery is blocked (e.g. â‚¹500,000.00 = 50,000,000 paise)",
+        description="Hard maximum ceiling above which recovery is blocked (e.g. ₹500,000.00 = 50,000,000 paise)",
     )
     policy_version: str = Field(
         default="v1.0",

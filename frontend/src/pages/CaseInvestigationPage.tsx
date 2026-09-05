@@ -173,7 +173,7 @@ export const CaseInvestigationPage: React.FC = () => {
               <CaseStatusBadge status={c.status} />
               <AssignmentBadge group={c.assignment_group} />
             </div>
-            <p className="text-xs font-mono text-slate-400">Payment Reference: {pay?.external_id || 'â€”'}</p>
+            <p className="text-xs font-mono text-slate-400">Payment Reference: {pay?.external_id || '—'}</p>
           </div>
           <div className="text-left md:text-right">
             <div className="text-xs text-slate-400 font-mono uppercase tracking-wider">Amount At Risk</div>
@@ -280,7 +280,7 @@ export const CaseInvestigationPage: React.FC = () => {
         <div className="p-5 rounded-lg bg-[#0c121e] border border-[#1f293d] space-y-3">
           <div className="flex items-center gap-2 border-b border-[#1f293d] pb-2 text-xs font-semibold uppercase tracking-wider text-slate-300">
             <CreditCard className="w-4 h-4 text-indigo-400" />
-            <span>Section 1 â€” Payment / Failure Context</span>
+            <span>Section 1 — Payment / Failure Context</span>
           </div>
           {pay ? (
             <div className="grid grid-cols-2 gap-3 text-xs font-mono">
@@ -290,7 +290,7 @@ export const CaseInvestigationPage: React.FC = () => {
               </div>
               <div>
                 <span className="text-slate-500 block">Payment Method</span>
-                <span className="text-slate-200">{pay.payment_method || 'â€”'}</span>
+                <span className="text-slate-200">{pay.payment_method || '—'}</span>
               </div>
               <div>
                 <span className="text-slate-500 block">Failure Code</span>
@@ -314,7 +314,7 @@ export const CaseInvestigationPage: React.FC = () => {
         <div className="p-5 rounded-lg bg-[#0c121e] border border-[#1f293d] space-y-3">
           <div className="flex items-center gap-2 border-b border-[#1f293d] pb-2 text-xs font-semibold uppercase tracking-wider text-slate-300">
             <Brain className="w-4 h-4 text-indigo-400" />
-            <span>Section 2 â€” AI Diagnosis</span>
+            <span>Section 2 — AI Diagnosis</span>
           </div>
           {diag ? (
             <div className="space-y-2 text-xs font-mono">
@@ -342,7 +342,7 @@ export const CaseInvestigationPage: React.FC = () => {
         <div className="md:col-span-2 p-5 rounded-lg bg-[#0c121e] border border-[#1f293d] space-y-3">
           <div className="flex items-center gap-2 border-b border-[#1f293d] pb-2 text-xs font-semibold uppercase tracking-wider text-slate-300">
             <Layers className="w-4 h-4 text-indigo-400" />
-            <span>Section 3 â€” Intervention Candidates (Ranked by ERV)</span>
+            <span>Section 3 — Intervention Candidates (Ranked by ERV)</span>
           </div>
           {!interventions || interventions.length === 0 ? (
             <p className="text-xs text-slate-500 font-mono py-4">No intervention candidates generated yet.</p>
@@ -382,7 +382,7 @@ export const CaseInvestigationPage: React.FC = () => {
         <div className="p-5 rounded-lg bg-[#0c121e] border border-[#1f293d] space-y-3">
           <div className="flex items-center gap-2 border-b border-[#1f293d] pb-2 text-xs font-semibold uppercase tracking-wider text-slate-300">
             <Shield className="w-4 h-4 text-indigo-400" />
-            <span>Section 4 â€” Policy Authorization</span>
+            <span>Section 4 — Policy Authorization</span>
           </div>
           {act ? (
             <div className="space-y-2 text-xs font-mono">
@@ -413,7 +413,7 @@ export const CaseInvestigationPage: React.FC = () => {
         <div className="p-5 rounded-lg bg-[#0c121e] border border-[#1f293d] space-y-3">
           <div className="flex items-center gap-2 border-b border-[#1f293d] pb-2 text-xs font-semibold uppercase tracking-wider text-slate-300">
             <CheckCircle className="w-4 h-4 text-indigo-400" />
-            <span>Section 6 â€” Verification (Authoritative Recovery)</span>
+            <span>Section 6 — Verification (Authoritative Recovery)</span>
           </div>
           {verif ? (
             <div className="space-y-2 text-xs font-mono">
@@ -423,7 +423,7 @@ export const CaseInvestigationPage: React.FC = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-500">Observed Payment Status</span>
-                <span className="text-slate-200">{verif.observed_payment_status || 'â€”'}</span>
+                <span className="text-slate-200">{verif.observed_payment_status || '—'}</span>
               </div>
               <div className="flex justify-between items-center border-t border-[#1f293d] pt-2">
                 <span className="text-slate-500">Verified Recovered Amount</span>

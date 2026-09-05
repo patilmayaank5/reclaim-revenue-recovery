@@ -24,8 +24,8 @@ from app.services.policy_engine import evaluate_policy_for_case, PolicyEngineErr
 @pytest.fixture
 def config():
     return PolicyLimitsConfig(
-        auto_approval_threshold_minor=2_000_000,  # â‚¹20,000.00
-        max_recovery_limit_minor=50_000_000,     # â‚¹500,000.00
+        auto_approval_threshold_minor=2_000_000,  # ₹20,000.00
+        max_recovery_limit_minor=50_000_000,     # ₹500,000.00
         policy_version="v1.0",
     )
 
@@ -36,7 +36,7 @@ def base_case():
         id=uuid.uuid4(),
         status=CaseStatus.DETECTED,
         assignment_group=AssignmentGroup.TREATMENT,
-        amount_at_risk_minor=499_900,  # â‚¹4,999.00 (Low-value)
+        amount_at_risk_minor=499_900,  # ₹4,999.00 (Low-value)
         currency="INR",
     )
 
@@ -151,7 +151,7 @@ def test_rule_fraud_blocks_automated_candidates(base_case, base_diagnosis, candi
 
 
 def test_rule_max_ceiling_overrides_approval_and_manual_review(base_case, base_diagnosis, candidate_smart_retry, candidate_manual_review, config):
-    # Recoverable amount exceeds max ceiling â‚¹500,000.00 (50,000,000 minor units)
+    # Recoverable amount exceeds max ceiling ₹500,000.00 (50,000,000 minor units)
     candidate_smart_retry.recoverable_amount_minor = 60_000_000
     candidate_manual_review.recoverable_amount_minor = 60_000_000
 
@@ -167,7 +167,7 @@ def test_rule_max_ceiling_overrides_approval_and_manual_review(base_case, base_d
 
 
 def test_rule_high_value_requires_approval(base_case, base_diagnosis, candidate_smart_retry, config):
-    # Amount â‚¹75,000.00 (7,500,000 minor units) is between 2M and 50M threshold
+    # Amount ₹75,000.00 (7,500,000 minor units) is between 2M and 50M threshold
     candidate_smart_retry.recoverable_amount_minor = 7_500_000
     ev = evaluate_candidate_policy(candidate_smart_retry, base_case, base_diagnosis, config)
     assert ev.outcome == PolicyOutcome.REQUIRE_APPROVAL
@@ -175,7 +175,7 @@ def test_rule_high_value_requires_approval(base_case, base_diagnosis, candidate_
 
 
 def test_rule_low_value_allow_auto(base_case, base_diagnosis, candidate_smart_retry, config):
-    # Amount â‚¹4,999.00 is <= 2M threshold
+    # Amount ₹4,999.00 is <= 2M threshold
     ev = evaluate_candidate_policy(candidate_smart_retry, base_case, base_diagnosis, config)
     assert ev.outcome == PolicyOutcome.ALLOW_AUTO
     assert ev.reason_code == PolicyReasonCode.ELIGIBLE_AUTO_EXECUTION
@@ -293,7 +293,7 @@ async def test_determinism_repeated_calls(base_case, base_diagnosis, candidate_s
 
 @pytest.mark.asyncio
 async def test_demo_scenario_a_low_value_auto(base_case, base_diagnosis, candidate_smart_retry, config):
-    # â‚¹4,999.00 failure, positive ERV -> ALLOW_AUTO
+    # ₹4,999.00 failure, positive ERV -> ALLOW_AUTO
     session = setup_mock_session(base_case, base_diagnosis, [candidate_smart_retry])
     decision = await evaluate_policy_for_case(session, base_case.id, config)
     assert decision.overall_outcome == PolicyOutcome.ALLOW_AUTO
@@ -302,7 +302,7 @@ async def test_demo_scenario_a_low_value_auto(base_case, base_diagnosis, candida
 
 @pytest.mark.asyncio
 async def test_demo_scenario_b_high_value_approval(base_case, base_diagnosis, candidate_smart_retry, config):
-    # â‚¹75,000.00 failure, positive ERV -> REQUIRE_APPROVAL
+    # ₹75,000.00 failure, positive ERV -> REQUIRE_APPROVAL
     candidate_smart_retry.recoverable_amount_minor = 7_500_000
     session = setup_mock_session(base_case, base_diagnosis, [candidate_smart_retry])
     decision = await evaluate_policy_for_case(session, base_case.id, config)
@@ -312,7 +312,7 @@ async def test_demo_scenario_b_high_value_approval(base_case, base_diagnosis, ca
 
 @pytest.mark.asyncio
 async def test_demo_scenario_c_excessive_value_blocked(base_case, base_diagnosis, candidate_smart_retry, config):
-    # â‚¹600,000.00 failure, above max ceiling -> BLOCK
+    # ₹600,000.00 failure, above max ceiling -> BLOCK
     candidate_smart_retry.recoverable_amount_minor = 60_000_000
     session = setup_mock_session(base_case, base_diagnosis, [candidate_smart_retry])
     decision = await evaluate_policy_for_case(session, base_case.id, config)

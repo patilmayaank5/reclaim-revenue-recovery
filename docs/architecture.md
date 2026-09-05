@@ -1,4 +1,4 @@
-# Reclaim â€” Frozen Architecture Reference
+# Reclaim — Frozen Architecture Reference
 
 This document summarises the frozen Reclaim architecture.
 It is the source of truth for all implementation decisions.
@@ -16,21 +16,21 @@ Audit records everything.
 
 ## Recovery Pipeline
 
-1. **Detection** â€” Identify revenue-at-risk cases.
-2. **Enrichment** â€” Gather relevant context for each case.
-3. **Diagnosis** â€” AI diagnoses the likely failure reason.
-4. **Intervention Generation** â€” AI produces a closed set of candidate interventions.
-5. **Expected Value Calculation** â€” Deterministic ERV computation:
+1. **Detection** — Identify revenue-at-risk cases.
+2. **Enrichment** — Gather relevant context for each case.
+3. **Diagnosis** — AI diagnoses the likely failure reason.
+4. **Intervention Generation** — AI produces a closed set of candidate interventions.
+5. **Expected Value Calculation** — Deterministic ERV computation:
    ```
-   ERV = P(recovery) Ã— Recoverable Amount âˆ’ Intervention Cost âˆ’ Risk Penalty
+   ERV = P(recovery) × Recoverable Amount − Intervention Cost − Risk Penalty
    ```
-6. **Policy** â€” Deterministic policy rules decide authorization.
-7. **Routing** â€” Actions route to automatic execution or human approval.
-8. **Execution** â€” Provider abstraction executes the action.
-9. **Verification** â€” Confirm actual recovery through payment status/events.
-10. **Audit** â€” Append-only, immutable audit trail.
-11. **Experimentation** â€” Treatment/holdout measurement of incremental lift.
-12. **Analytics** â€” Segment-level intervention analytics.
+6. **Policy** — Deterministic policy rules decide authorization.
+7. **Routing** — Actions route to automatic execution or human approval.
+8. **Execution** — Provider abstraction executes the action.
+9. **Verification** — Confirm actual recovery through payment status/events.
+10. **Audit** — Append-only, immutable audit trail.
+11. **Experimentation** — Treatment/holdout measurement of incremental lift.
+12. **Analytics** — Segment-level intervention analytics.
 
 ## Hard Rules
 
@@ -47,7 +47,7 @@ Audit records everything.
 - Holdout cases receive no AI processing or intervention.
 
 ### Execution
-- Provider abstraction: `ExecutionProvider â†’ RazorpayProvider | SimulatorProvider | DemoProvider`
+- Provider abstraction: `ExecutionProvider → RazorpayProvider | SimulatorProvider | DemoProvider`
 - Do not invent Razorpay APIs.
 
 ### Verification

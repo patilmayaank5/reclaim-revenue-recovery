@@ -105,7 +105,7 @@ def setup_mock_session(case, diagnosis, candidates, existing_action=None, existi
 
 @pytest.mark.asyncio
 async def test_create_action_allow_auto(base_case, base_diagnosis, base_candidate):
-    # Low-value case (â‚¹4,999.00) yields ALLOW_AUTO
+    # Low-value case (₹4,999.00) yields ALLOW_AUTO
     session = setup_mock_session(base_case, base_diagnosis, [base_candidate])
 
     resp = await create_action_for_case(session, base_case.id)
@@ -122,7 +122,7 @@ async def test_create_action_allow_auto(base_case, base_diagnosis, base_candidat
 
 @pytest.mark.asyncio
 async def test_create_action_require_approval(base_case, base_diagnosis, base_candidate):
-    # High-value case (â‚¹75,000.00) yields REQUIRE_APPROVAL
+    # High-value case (₹75,000.00) yields REQUIRE_APPROVAL
     base_case.amount_at_risk_minor = 7_500_000
     base_candidate.recoverable_amount_minor = 7_500_000
 

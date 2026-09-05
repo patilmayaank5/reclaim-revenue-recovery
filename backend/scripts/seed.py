@@ -16,7 +16,7 @@ import uuid
 from datetime import datetime, timezone
 
 # ============================================================
-# FIXED UUIDs â€” deterministic, never random
+# FIXED UUIDs — deterministic, never random
 # ============================================================
 
 # Merchants

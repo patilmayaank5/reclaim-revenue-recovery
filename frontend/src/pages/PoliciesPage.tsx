@@ -29,7 +29,7 @@ export function PoliciesPage() {
         <div>
           <h1 className="text-2xl font-semibold text-white">Policy Engine</h1>
           <p className="text-sm text-slate-400 mt-1">
-            Current Version: v{data.policy_config.version} â€¢ Active: {data.policy_config.is_active ? 'Yes' : 'No'}
+            Current Version: v{data.policy_config.version} ”¢ Active: {data.policy_config.is_active ? 'Yes' : 'No'}
           </p>
         </div>
       </div>
