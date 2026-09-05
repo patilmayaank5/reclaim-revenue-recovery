@@ -262,7 +262,9 @@ export interface EvaluationRule {
 
 export interface PolicyEvaluationSummary {
   total_evaluations: number;
-  outcome_counts: Record<PolicyOutcome, number>;
+  allow_auto_count: number;
+  require_approval_count: number;
+  block_count: number;
 }
 
 export interface RecentEvaluation {

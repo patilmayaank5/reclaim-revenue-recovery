@@ -16,11 +16,11 @@ router = APIRouter()
 class AuditEventItem(BaseModel):
     id: uuid.UUID
     event_type: str
+    entity_type: str
     entity_id: uuid.UUID
     actor: str
-    summary: str
     event_data: dict | None
-    created_at: datetime
+    timestamp: datetime
 
 class AuditEventsResponse(BaseModel):
     items: list[AuditEventItem]
@@ -66,11 +66,11 @@ async def get_audit_events(
         items.append(AuditEventItem(
             id=evt.id,
             event_type=evt.event_type.value,
+            entity_type=evt.entity_type,
             entity_id=evt.entity_id,
             actor=evt.actor,
-            summary=evt.summary,
             event_data=evt.event_data,
-            created_at=evt.created_at
+            timestamp=evt.created_at
         ))
 
     return AuditEventsResponse(

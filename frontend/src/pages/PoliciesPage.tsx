@@ -74,19 +74,19 @@ export function PoliciesPage() {
               <div className="p-4 bg-slate-800/30 rounded border border-slate-800">
                 <div className="text-sm text-slate-400 mb-1">Allow Auto</div>
                 <div className="text-2xl font-semibold text-emerald-400">
-                  {data.evaluation_summary.outcome_counts['allow_auto'] || 0}
+                  {data.evaluation_summary.allow_auto_count || 0}
                 </div>
               </div>
               <div className="p-4 bg-slate-800/30 rounded border border-slate-800">
                 <div className="text-sm text-slate-400 mb-1">Require Approval</div>
                 <div className="text-2xl font-semibold text-amber-400">
-                  {data.evaluation_summary.outcome_counts['require_approval'] || 0}
+                  {data.evaluation_summary.require_approval_count || 0}
                 </div>
               </div>
               <div className="p-4 bg-slate-800/30 rounded border border-slate-800">
                 <div className="text-sm text-slate-400 mb-1">Blocked</div>
                 <div className="text-2xl font-semibold text-red-400">
-                  {data.evaluation_summary.outcome_counts['block'] || 0}
+                  {data.evaluation_summary.block_count || 0}
                 </div>
               </div>
             </div>
