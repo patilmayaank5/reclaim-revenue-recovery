@@ -29,7 +29,7 @@ export function PoliciesPage() {
         <div>
           <h1 className="text-2xl font-semibold text-white">Policy Engine</h1>
           <p className="text-sm text-slate-400 mt-1">
-            Current Version: v{data.policy_config.version} ”¢ Active: {data.policy_config.is_active ? 'Yes' : 'No'}
+            Current Version: v{data.policy_config.policy_version} ”¢ Active: {data.policy_config.is_active ? 'Yes' : 'No'}
           </p>
         </div>
       </div>
@@ -42,16 +42,16 @@ export function PoliciesPage() {
             {data.evaluation_rules.map((rule, idx) => (
               <div key={rule.id} className="border border-slate-800 rounded p-4 bg-slate-800/20 relative">
                 <div className="absolute top-4 right-4 flex items-center space-x-2">
-                  <span className="text-xs text-slate-500 font-mono">Priority: {rule.priority}</span>
+                  <span className="text-xs text-slate-500 font-mono">Priority: {rule.precedence}</span>
                   <span className={`px-2 py-1 rounded text-xs font-medium border ${
-                    rule.action === 'allow_auto' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                    rule.action === 'block' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                    rule.outcomes === 'allow_auto' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                    rule.outcomes === 'block' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
                     'bg-amber-500/10 text-amber-500 border-amber-500/20'
                   }`}>
-                    {rule.action.toUpperCase()}
+                    {rule.outcomes.toUpperCase()}
                   </span>
                 </div>
-                <h4 className="font-medium text-white mb-1">{rule.name}</h4>
+                <h4 className="font-medium text-white mb-1">{rule.rule}</h4>
                 {rule.description && <p className="text-sm text-slate-400 mb-3">{rule.description}</p>}
 
                 <div className="bg-slate-950 p-2 rounded text-xs text-slate-300 font-mono overflow-x-auto">
@@ -107,15 +107,15 @@ export function PoliciesPage() {
                 <tbody className="divide-y divide-slate-800/50">
                   {data.recent_evaluations.map(ev => (
                     <tr key={ev.id}>
-                      <td className="py-3 text-slate-400">{new Date(ev.evaluated_at).toLocaleTimeString()}</td>
+                      <td className="py-3 text-slate-400">{new Date(ev.timestamp).toLocaleTimeString()}</td>
                       <td className="py-3 font-mono text-slate-300">{ev.case_id.substring(0, 8)}...</td>
                       <td className="py-3">
                         <span className={`px-2 py-0.5 rounded text-xs font-medium border ${
-                          ev.outcome === 'allow_auto' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                          ev.outcome === 'block' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                          ev.overall_outcome === 'allow_auto' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                          ev.overall_outcome === 'block' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
                           'bg-amber-500/10 text-amber-500 border-amber-500/20'
                         }`}>
-                          {ev.outcome.replace('_', ' ')}
+                          {ev.overall_outcome.replace('_', ' ')}
                         </span>
                       </td>
                       <td className="py-3 text-slate-300" title={data.reason_codes[ev.reason_code]}>

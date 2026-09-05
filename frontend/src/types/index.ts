@@ -246,18 +246,18 @@ export interface AnalyticsPipelineFunnel {
 export interface PolicyConfig {
   id: string;
   name: string;
-  is_active: boolean;
-  version: number;
+  is_active?: boolean;
+  policy_version: string;
   created_at: string;
 }
 
 export interface EvaluationRule {
   id: string;
-  name: string;
+  rule: string;
   description?: string;
-  priority: number;
-  conditions: any;
-  action: PolicyOutcome;
+  precedence: number;
+  conditions?: any;
+  outcomes: PolicyOutcome | string;
 }
 
 export interface PolicyEvaluationSummary {
@@ -270,8 +270,8 @@ export interface PolicyEvaluationSummary {
 export interface RecentEvaluation {
   id: string;
   case_id: string;
-  evaluated_at: string;
-  outcome: PolicyOutcome;
+  timestamp: string;
+  overall_outcome: PolicyOutcome | string;
   reason_code: string;
 }
 
