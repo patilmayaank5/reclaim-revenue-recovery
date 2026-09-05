@@ -209,14 +209,14 @@ async def _run_single_scenario(session: AsyncSession, scenario: DemoScenarioDef,
     try:
         action_res = await create_action_for_case(session, case.id)
     except Exception as e:
-        return {"scenario": scenario.name, "case_id": case_id_str, "status": "blocked by policy", "error": str(e)}
+        return {"scenario": scenario.name, "case_id": str(c_id), "status": "blocked by policy", "error": str(e)}
 
     # Check if PENDING_APPROVAL
     if action_res.action and action_res.action.status.value == "pending_approval":
         await session.commit()
         return {
             "scenario": scenario.name,
-            "case_id": case_id_str,
+            "case_id": str(c_id),
             "action_id": str(action_res.action.id),
             "final_status": "PENDING_APPROVAL",
             "message": "Waiting for human approval."
@@ -242,7 +242,7 @@ async def _run_single_scenario(session: AsyncSession, scenario: DemoScenarioDef,
 
     return {
         "scenario": scenario.name,
-        "case_id": case_id_str,
+        "case_id": str(c_id),
         "final_status": case.status.value
     }
 
